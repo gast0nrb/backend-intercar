@@ -1,59 +1,50 @@
 const Categoria = require("../models/Categoria");
+const sq = require("../database/connection");
+const colors = require("colors");
+const { BadRequest, NotFound, GeneralError } = require("../utils/classErrors");
+const dryFn = require("../middlewares/dryFn");
 
-const createCategorias = async (req, res, next) => {
-  try {
-    const cat = await Categoria.create({nombre : req.body.nombre.toUpperCase()});
-    res.status(201).json({
-      data: {
-        created: {
-          categoria: req.body,
-        },
-        error: {},
-      },
-    });
-  } catch (err) {
-    console.error(err)
-    res.status(500).json({
-      data: {
-        error: err,
-      },
-    });
+const listCategorias = dryFn(async (req, res, next) => {
+  const categorias = await Categoria.findAll();
+  res.status(200).json({
+    success: true,
+    data: {
+      categorias,
+    },
+  });
+});
+
+const createCategorias = dryFn(async (req, res, next) => {
+  const t = await sq.transaction();
+  const categoria = await Categoria.create(req.body);
+  await t.commit();
+});
+
+const updateCategoria = dryFn(async (req, res, next) => {
+  const t = await sq.transaction();
+  if (!req.body.nombre) {
+    return next(
+      new GeneralError(`No se especifico el campo "nombre" para realizar el update`, 400)
+    );
   }
-};
-
-const listCategorias = async (req, res, next) => {
-  try {
-    const cat = await Categoria.findAll();
-    if (cat.length == 0) {
-      return res.status(404).json({
-        success: true,
-        data: {
-          categorias: {},
-          error: {
-            lengthError: "No existen elementos",
-          },
-        },
-      });
+  const categoria = await Categoria.update(req.body, {
+    where: {
+      id: req.params.id,
+    },
+  });
+  await t.commit();
+  res.status(200).json({
+    success : true,
+    data : {
+      updated : {
+        nombre : req.body.nombre
+      }
     }
-    console.log("data");
-    res.status(200).json({
-        success : true,
-        data : {
-            categorias : cat,
-            error : {}
-        }
-    })
-  } catch (err) {
-    res.status(500).json({
-        success : false, 
-        data : {
-            error : err
-        }
-    })
-  }
-};
-
+  })
+});
 
 module.exports = {
-    listCategorias, createCategorias
-}
+  listCategorias,
+  createCategorias,
+  updateCategoria,
+};
