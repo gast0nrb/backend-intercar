@@ -17,7 +17,7 @@ const Categoria = sq.define(
     }
     },{
         timestamps : false
-    }
+    },
 )
 
 

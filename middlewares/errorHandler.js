@@ -8,12 +8,6 @@ const printError = (error) => {
   console.log("--------------------".red);
 };
 
-//Rollback transactionm
-const rollBack = async () => {
-  const t = await sq.transaction();
-  await t.rollback();
-};
-
 const logError = (err, req, res, next) => {
   printError(err);
   next(err);
@@ -30,19 +24,19 @@ const handleErrors = (err, req, res, next) => {
   if (error.name == "SequelizeUniqueConstraintError") {
     const message = `El valor "${error.errors[0].value}" ya existe en la base de datos`;
     error = new GeneralError(message, 400);
-    rollBack();
   }
 
-  if(error.name == "SequelizeValidationError") {
+  if (error.name == "SequelizeValidationError") {
     const message = `Revisar con varios valores para devolver el array`;
     error = new GeneralError(message, 400);
-    rollBack();
   }
 
+  if (error.name == "SequelizeDatabaseError") {
+    const message = `El id entregado en el parametro no corresponde a un id de tipo int`;
+    error = new GeneralError(message, 400);
+  }
 
-
-  //response devuelto
- res.status(error.statusCode || 500).json({
+  return res.status(error.statusCode || 500).json({
     success: false,
     error: {
       message: error.message || "SERVER ERROR",

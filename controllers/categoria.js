@@ -21,30 +21,62 @@ const createCategorias = dryFn(async (req, res, next) => {
 });
 
 const updateCategoria = dryFn(async (req, res, next) => {
-  const t = await sq.transaction();
   if (!req.body.nombre) {
     return next(
-      new GeneralError(`No se especifico el campo "nombre" para realizar el update`, 400)
+      new GeneralError("No hay datos para modificar en la propiedad -nombre-")
     );
   }
-  const categoria = await Categoria.update(req.body, {
+
+  const t = sq
+    .transaction(async () => {
+      const categoria = await Categoria.update(req.body, {
+        where: { id: req.params.id },
+      });
+      return categoria;
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+
+  return res.status(200).json({
+    success: true,
+    data: {
+      updated: req.body,
+    },
+  });
+});
+
+const deleteCategoria = dryFn(async (req, res, next) => {
+  const t = await sq.transaction();
+  const categoria = await Categoria.destroy({
     where: {
       id: req.params.id,
     },
   });
-  await t.commit();
+
+  if (!categoria) {
+    t.rollback();
+    return next(
+      new GeneralError(
+        "No se encontró categoría con el id : " + req.params.id,
+        404
+      )
+    );
+  }
+
+  t.commit();
+
   res.status(200).json({
-    success : true,
-    data : {
-      updated : {
-        nombre : req.body.nombre
-      }
-    }
-  })
+    success: true,
+    data: {
+      deleted: `categoria con el id "${req.params.id}" eliminada`,
+    },
+  });
 });
 
 module.exports = {
   listCategorias,
   createCategorias,
   updateCategoria,
+  deleteCategoria,
 };
