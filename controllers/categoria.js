@@ -26,24 +26,19 @@ const updateCategoria = dryFn(async (req, res, next) => {
       new GeneralError("No hay datos para modificar en la propiedad -nombre-")
     );
   }
-
   const t = sq
     .transaction(async () => {
       const categoria = await Categoria.update(req.body, {
         where: { id: req.params.id },
       });
-      return categoria;
-    })
-    .catch((e) => {
-      console.log(e);
-    });
+      res.status(200).json({success : true, data : {
+        updated : req.body
+      }})
 
-  return res.status(200).json({
-    success: true,
-    data: {
-      updated: req.body,
-    },
-  });
+      return categoria;
+    }).catch((e)=> {
+      return next(e);
+    })
 });
 
 const deleteCategoria = dryFn(async (req, res, next) => {
