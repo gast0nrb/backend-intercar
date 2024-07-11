@@ -16,9 +16,13 @@ const Categoria = sq.define(
         unique : true,
     }
     },{
-        timestamps : false
+        timestamps : false,
     },
 )
+
+Categoria.addHook('beforeValidate', 'clg values', (user, options )=> {
+    console.log(user)
+})
 
 
 module.exports = Categoria;

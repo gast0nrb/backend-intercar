@@ -3,6 +3,7 @@ const sq = require("../database/connection");
 const colors = require("colors");
 const { BadRequest, NotFound, GeneralError } = require("../utils/classErrors");
 const dryFn = require("../middlewares/dryFn");
+const { where } = require("sequelize");
 
 const listCategorias = dryFn(async (req, res, next) => {
   const categorias = await Categoria.findAll();
@@ -21,24 +22,43 @@ const createCategorias = dryFn(async (req, res, next) => {
 });
 
 const updateCategoria = dryFn(async (req, res, next) => {
-  if (!req.body.nombre) {
+  if (!req.body.hasOwnProperty("nombre")) {
     return next(
-      new GeneralError("No hay datos para modificar en la propiedad -nombre-")
+      new GeneralError(
+        "No hay datos entregados, revisa si la propiedad 'nombre' existe en el json enviado a la api."
+      )
     );
+  }
+  //Valida si es que hay alguna categoria en la bd con el id pasado por parametro
+  const dbCategoria = await Categoria.findByPk(req.params.id);
+  if (!dbCategoria) {
+    return next(
+      new GeneralError("No existe categoría con el id especificado", 404)
+    );
+  }
+  if(dbCategoria.nombre == req.body.nombre) {
+    return next(
+      new GeneralError(`El valor de la propiedad 'NOMBRE' en la categoría con id '${req.params.id}' ya es '${req.body.nombre}'`, 400)
+    )
   }
   const t = sq
     .transaction(async () => {
+      //Quizá se puede hacer vía hooks
       const categoria = await Categoria.update(req.body, {
         where: { id: req.params.id },
       });
-      res.status(200).json({success : true, data : {
-        updated : req.body
-      }})
 
+      res.status(200).json({
+        success: true,
+        data: {
+          updated: req.body,
+        },
+      });
       return categoria;
-    }).catch((e)=> {
-      return next(e);
     })
+    .catch((e) => {
+      return next(e);
+    });
 });
 
 const deleteCategoria = dryFn(async (req, res, next) => {
