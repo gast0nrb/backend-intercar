@@ -1,12 +1,13 @@
 const Categoria = require("../models/Categoria");
 const sq = require("../database/connection");
 const colors = require("colors");
-const { BadRequest, NotFound, GeneralError } = require("../utils/classErrors");
+const { GeneralError } = require("../utils/classErrors");
 const dryFn = require("../middlewares/dryFn");
-const { where } = require("sequelize");
+
+
 
 const listCategorias = dryFn(async (req, res, next) => {
-  const categorias = await Categoria.findAll();
+  const categorias = await Categoria.findAll({limit : parseInt(req.query.limit) ,order : [["nombre", "ASC"]]});
   res.status(200).json({
     success: true,
     data: {
