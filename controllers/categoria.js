@@ -1,15 +1,21 @@
 const Categoria = require("../models/Categoria");
 const sq = require("../database/connection");
-const colors = require("colors");
 const { GeneralError } = require("../utils/classErrors");
 const dryFn = require("../middlewares/dryFn");
 
-
-
+//puede recibir un limit
 const listCategorias = dryFn(async (req, res, next) => {
-  const categorias = await Categoria.findAll({limit : parseInt(req.query.limit) ,order : [["nombre", "ASC"]]});
+  let queryParams = {
+    order: [["nombre", "ASC"]],
+  };
+  if (req.query.limit) {
+    queryParams = { ...queryParams, limit: parseInt(req.query.limit) };
+  }
+
+  const categorias = await Categoria.findAll(queryParams);
   res.status(200).json({
     success: true,
+    len: categorias.length,
     data: {
       categorias,
     },
@@ -17,9 +23,20 @@ const listCategorias = dryFn(async (req, res, next) => {
 });
 
 const createCategorias = dryFn(async (req, res, next) => {
-  const t = await sq.transaction();
-  const categoria = await Categoria.create(req.body);
-  await t.commit();
+  const t = sq
+    .transaction(async () => {
+      const categoria = await Categoria.create(req.body);
+      res.status(201).json({
+        success: true,
+        data: {
+          created: req.body,
+        },
+      });
+      return categoria;
+    })
+    .catch((error) => {
+      return next(error);
+    });
 });
 
 const updateCategoria = dryFn(async (req, res, next) => {
@@ -37,10 +54,13 @@ const updateCategoria = dryFn(async (req, res, next) => {
       new GeneralError("No existe categoría con el id especificado", 404)
     );
   }
-  if(dbCategoria.nombre == req.body.nombre) {
+  if (dbCategoria.nombre == req.body.nombre) {
     return next(
-      new GeneralError(`El valor de la propiedad 'NOMBRE' en la categoría con id '${req.params.id}' ya es '${req.body.nombre}'`, 400)
-    )
+      new GeneralError(
+        `El valor de la propiedad 'NOMBRE' en la categoría con id '${req.params.id}' ya es '${req.body.nombre}'`,
+        400
+      )
+    );
   }
   const t = sq
     .transaction(async () => {
@@ -63,31 +83,34 @@ const updateCategoria = dryFn(async (req, res, next) => {
 });
 
 const deleteCategoria = dryFn(async (req, res, next) => {
-  const t = await sq.transaction();
-  const categoria = await Categoria.destroy({
-    where: {
-      id: req.params.id,
-    },
-  });
+  const t = sq
+    .transaction(async () => {
+      const findCategoria = await Categoria.findByPk(req.params.id);
+      if (!findCategoria) {
+        return next(
+          new GeneralError(
+            `No se encontró categoría con el id ${req.params.id}`,
+            400
+          )
+        );
+      }
+      const categoria = await Categoria.destroy({
+        where: {
+          id: req.params.id,
+        },
+      });
+      res.status(200).json({
+        success: true,
+        data: {
+          deleted: `Categoria con el id : ${req.params.id} eliminado`,
+        },
+      });
 
-  if (!categoria) {
-    t.rollback();
-    return next(
-      new GeneralError(
-        "No se encontró categoría con el id : " + req.params.id,
-        404
-      )
-    );
-  }
-
-  t.commit();
-
-  res.status(200).json({
-    success: true,
-    data: {
-      deleted: `categoria con el id "${req.params.id}" eliminada`,
-    },
-  });
+      return categoria;
+    })
+    .catch((e) => {
+      return next(e);
+    });
 });
 
 module.exports = {

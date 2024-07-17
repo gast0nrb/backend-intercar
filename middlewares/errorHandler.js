@@ -27,8 +27,15 @@ const handleErrors = (err, req, res, next) => {
   }
 
   if (error.name == "SequelizeValidationError") {
-    const message = `Revisar con varios valores para devolver el array`;
-    error = new GeneralError(message, 400);
+    const fields = [];
+    console.log(error.errors[0].path);
+    error.errors.map((e) => {
+      fields.push(e.path.toUpperCase());
+    });
+    error = new GeneralError(
+      `Se esperan los siguientes campos y no han sido entregados : ${fields}`,
+      400
+    );
   }
 
   if (error.name == "SequelizeDatabaseError") {

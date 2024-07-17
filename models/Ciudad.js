@@ -1,8 +1,10 @@
 const sq = require("../database/connection");
 const { DataTypes } = require("sequelize");
+const  Comuna = require("./Comuna");
 
-const Categoria = sq.define(
-  "CATEGORIA",
+// registros creados desde la base de datos
+const Ciudad = sq.define(
+  "CIUDAD",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -14,14 +16,16 @@ const Categoria = sq.define(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-      validate: {
-        notEmpty: true,
-      },
     },
   },
-  {
-    timestamps: false,
-  }
+  { timestamps: false , freezeTableName : true}
 );
 
-module.exports = Categoria;
+Ciudad.hasMany(Comuna, {
+  foreignKey: {
+    allowNull: false,
+    name : "fk_ciudad_comuna"
+  },
+});
+
+module.exports = Ciudad;

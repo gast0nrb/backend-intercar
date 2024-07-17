@@ -9,6 +9,7 @@ const {handleErrors, logError} = require("./middlewares/errorHandler")
 
 //Routes imports
 const r_categoria = require("./routes/r_categoria")
+const r_ciudades = require("./routes/r_ciudades");
 
 //Instancias
 const app = express()
@@ -24,6 +25,7 @@ app.use(express.json())
 
 //rutas
 app.use("/api/v0.5/webintercar", r_categoria);
+app.use("/api/v0.5/webintercar", r_ciudades);
 
 
 //Error handlers
