@@ -15,18 +15,10 @@ const Comuna = sq.define(
       allowNull: false,
       unique: true,
     },
-    fk_ciudad : {
-      type : DataTypes.INTEGER,
-      allowNull : false
-    }
   },
   { timestamps: false, freezeTableName: true }
 );
 
-Comuna.belongsTo(Ciudad, {
-  foreignKey: {
-    allowNull: false,
-  },
-});
+
 
 module.exports = Comuna;

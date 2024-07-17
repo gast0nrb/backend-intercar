@@ -23,7 +23,7 @@ const getCiudades = dryFn(async (req, res, next) => {
 const getComunasByCiudades = dryFn(async (req, res, next) => {
   const comunas = await Comuna.findAll({
     where: {
-      fk_ciudad_comuna: req.params.id,
+      fk_ciudad: req.params.id,
     },
   });
   if (comunas.length == 0) {
