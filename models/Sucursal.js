@@ -43,7 +43,6 @@ const Sucursal = sq.define('Sucursal', {
     },
     foto_url : {
         type : DataTypes.STRING,
-        unique : true,
         defaultValue : '/defaultSucursal.png',
         allowNull : false,
         validate : {

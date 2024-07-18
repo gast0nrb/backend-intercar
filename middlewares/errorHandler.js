@@ -20,15 +20,23 @@ const handleErrors = (err, req, res, next) => {
   //Setea el mensaje de error igual al err.message
   error.message = err.message;
 
+  if(error.name == 'SequelizeForeignKeyConstraintError') {
+    const message = `El id (${req.body.fk_comuna_sucursal}) de referencia para fk_comuna_sucursal no existe en la tabla comuna`
+    error = new GeneralError(message, 400);
+  }
+
   //Validar con if las diferentes que pueden haber
   if (error.name == "SequelizeUniqueConstraintError") {
-    const message = `El valor "${error.errors[0].value}" ya existe en la base de datos`;
+    let fields = ""
+    error.errors.map((e)=> {
+    fields = `(${e.path})`
+    })
+    const message = `El/Los campo/s ${fields.toUpperCase()} ya existe/n en la base de datos es un valor único (no repetible)`;
     error = new GeneralError(message, 400);
   }
 
   if (error.name == "SequelizeValidationError") {
     const fields = [];
-    console.log(error.errors[0].path);
     error.errors.map((e) => {
       fields.push(e.path.toUpperCase());
     });
