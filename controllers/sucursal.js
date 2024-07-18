@@ -19,12 +19,31 @@ const createSucursal = dryFn(async(req, res, next) => {
 });
 
 const deleteSucursal = dryFn(async(req, res, next) => {
-
+    const s1 = await Sucursal.findByPk(req.params.id);
+    if(!s1) {
+        return next(new GeneralError(`No se encontró sucursal con el id (${req.params.id})`))
+    }
+    const t = sq.transaction(async()=> {
+        const sucursal = await Sucursal.destroy({where : {
+            id : req.params.id
+        }})
+        res.status(200).json({
+            success : true, 
+            data : {
+                deleted : `Eliminada la sucursal con id ${req.params.id}`
+            }
+        })
+        return sucursal
+    })
 })
 
 const updateSucursal = dryFn(async(req, res, next) => {
+        const s1 = await Sucursal.findByPk(req.params.id);
+        if(!s1) {
+            return next(new GeneralError(`No se encontró sucursal con la id (${req.params.id})`))
+        }
     const t = sq.transaction(async()=> {
-        const sucursal = await Sucursal.update({ where : {
+        const sucursal = await Sucursal.update(req.body, {where : {
             id : req.params.id
         }})
         res.status(200).json({

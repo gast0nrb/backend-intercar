@@ -2,6 +2,7 @@ const sq = require("../database/connection");
 const { DataTypes } = require("sequelize");
 const Ciudad = require("./Categoria");
 const Sucursal = require("./Sucursal");
+const Cliente = require("./Cliente");
 
 const Comuna = sq.define(
   "COMUNA",
@@ -19,6 +20,21 @@ const Comuna = sq.define(
   },
   { timestamps: false, freezeTableName: true }
 );
+
+
+Comuna.hasMany(Cliente, {
+  foreignKey : {
+    name : "fk_comuna_cliente",
+    allowNull : false
+  }
+})
+
+Cliente.belongsTo(Comuna, {
+  foreignKey : {
+    name : "fk_comuna_cliente",
+    allowNull : false
+  }
+})
 
 Comuna.hasMany(Sucursal, {
   foreignKey : {

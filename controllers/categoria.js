@@ -54,14 +54,6 @@ const updateCategoria = dryFn(async (req, res, next) => {
       new GeneralError("No existe categoría con el id especificado", 404)
     );
   }
-  if (dbCategoria.nombre == req.body.nombre) {
-    return next(
-      new GeneralError(
-        `El valor de la propiedad 'NOMBRE' en la categoría con id '${req.params.id}' ya es '${req.body.nombre}'`,
-        400
-      )
-    );
-  }
   const t = sq
     .transaction(async () => {
       //Quizá se puede hacer vía hooks
