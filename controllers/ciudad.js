@@ -4,7 +4,7 @@ const { GeneralError } = require("../utils/classErrors");
 const Comuna = require("../models/Comuna");
 
 const getCiudades = dryFn(async (req, res, next) => {
-  const ciudades = await Ciudad.findAll();
+  const ciudades = await Ciudad.findAll({include : [{model : Comuna}]});
   if (ciudades.length == 0) {
     return next(
       new GeneralError(

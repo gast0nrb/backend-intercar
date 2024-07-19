@@ -4,6 +4,7 @@ const {getClientes, getCliente, updateCliente, deleteCliente, createCliente} = r
 
 const router = Router();
 
+//Espera como query opcional : {limit | ciudad | comuna}
 router.route("/clientes").get(getClientes).post(createCliente)
 router.route("/clientes/:rut").get(getCliente).put(updateCliente).delete(deleteCliente)
 
