@@ -23,6 +23,7 @@ const Cliente = sq.define('Cliente', {
     telefono : {
         type : DataTypes.INTEGER,
         allowNull : false,
+        unique : true,
         validate  : {
             len : 9
         },   
@@ -31,13 +32,11 @@ const Cliente = sq.define('Cliente', {
         type : DataTypes.INTEGER,
         allowNull : true,
         defaultValue : 0,
-        validate : {
-            len : 9
-        }
     },
     email : {
         type : DataTypes.STRING,
         allowNull : false,
+        unique : true
         //Agregar regex validadora
     },
     hash : {

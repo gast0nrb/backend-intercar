@@ -11,6 +11,7 @@ const {handleErrors, logError} = require("./middlewares/errorHandler")
 const r_categoria = require("./routes/r_categoria")
 const r_ciudades = require("./routes/r_ciudades");
 const r_sucursales = require("./routes/r_sucursales");
+const r_clientes = require("./routes/r_clientes");
 
 //Instancias
 const app = express()
@@ -28,6 +29,7 @@ app.use(express.json())
 app.use("/api/v0.5/webintercar", r_categoria);
 app.use("/api/v0.5/webintercar", r_ciudades);
 app.use("/api/v0.5/webintercar", r_sucursales);
+app.use("/api/v0.5/webintercar", r_clientes);
 
 
 //Error handlers
