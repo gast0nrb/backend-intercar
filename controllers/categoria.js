@@ -64,6 +64,7 @@ const updateCategoria = dryFn(async (req, res, next) => {
       res.status(200).json({
         success: true,
         data: {
+          message : `Modificada la categoría con el id : (${req.params.id})`,
           updated: req.body,
         },
       });

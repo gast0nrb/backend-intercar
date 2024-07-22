@@ -49,6 +49,7 @@ const updateSucursal = dryFn(async(req, res, next) => {
         res.status(200).json({
             success : true, 
             data : {
+                message : `Modificada la sucursal con el id : (${req.params.id})`,
                 updated : req.body
             }
         })
