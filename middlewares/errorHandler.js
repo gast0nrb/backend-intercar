@@ -21,7 +21,9 @@ const handleErrors = (err, req, res, next) => {
   error.message = err.message;
 
   if (error.name == "SequelizeForeignKeyConstraintError") {
-    const message = `El id (${req.body.fk_comuna_sucursal}) de referencia para fk_comuna_sucursal no existe en la tabla comuna`;
+    let messageFor = error.parameters[0]
+    //Parameters
+    const message = `El valor: (${error.value}) no existe en la tabla: (${error.table}) campo: (${error.fields[0]}) (foreign key reference)`
     error = new GeneralError(message, 400);
   }
 

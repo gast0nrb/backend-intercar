@@ -31,7 +31,6 @@ const ListaProducto = sq.define('ListaProducto', {
         max : 99
         }
     },
-
 },{timestamps : true})
 
 

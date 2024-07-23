@@ -1,7 +1,23 @@
 const sq = require("../database/connection");
 const dryFn = require("../middlewares/dryFn");
+const Categoria = require("../models/Categoria");
+const ListaPrecio = require("../models/ListaPrecio");
+const ListaProducto = require("../models/ListaProducto");
 const Producto = require("../models/Producto");
-const GeneralError = require("../utils/classErrors");
+const { GeneralError } = require("../utils/classErrors");
+
+const getProductos = dryFn(async (req, res, next) => {
+  const p = await Producto.findAll({
+    include: [
+      { model: Categoria },
+      { model: ListaProducto, include: ListaPrecio },
+    ],
+  });
+  res.status(200).json({
+    success: true,
+    data: p,
+  });
+});
 
 const createProducto = dryFn(async (req, res, next) => {
   const t = sq
@@ -10,7 +26,7 @@ const createProducto = dryFn(async (req, res, next) => {
       res.status(201).json({
         success: true,
         data: {
-          message: `Creado correctamente el producto con el código : (${req.params.codigo})`,
+          message: `Creado correctamente el producto con el código : (${req.body.codigo})`,
           created: req.body,
         },
       });
@@ -41,7 +57,7 @@ const updateProducto = dryFn(async (req, res, next) => {
       res.status(200).json({
         success: true,
         data: {
-          message: `modificado el producto con el codigo : (${req.params.id})`,
+          message: `modificado el producto con el codigo : (${req.params.codigo})`,
           updated: req.body,
         },
       });
@@ -72,7 +88,7 @@ const deleteProducto = dryFn(async (req, res, next) => {
       res.status(200).json({
         success: true,
         data: {
-          message: `Eliminado el producto con el código (${req.body.codigo})`,
+          message: `Eliminado el producto con el código (${req.params.codigo})`,
         },
       });
       return p1;
@@ -81,3 +97,10 @@ const deleteProducto = dryFn(async (req, res, next) => {
       return next(e);
     });
 });
+
+module.exports = {
+  deleteProducto,
+  createProducto,
+  updateProducto,
+  getProductos,
+};
