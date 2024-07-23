@@ -16,9 +16,7 @@ const listCategorias = dryFn(async (req, res, next) => {
   res.status(200).json({
     success: true,
     len: categorias.length,
-    data: {
-      categorias,
-    },
+    data: categorias,
   });
 });
 
@@ -29,6 +27,7 @@ const createCategorias = dryFn(async (req, res, next) => {
       res.status(201).json({
         success: true,
         data: {
+          message: `Categoría (${req.body.nombre}) creada correctamente`,
           created: req.body,
         },
       });
@@ -64,7 +63,7 @@ const updateCategoria = dryFn(async (req, res, next) => {
       res.status(200).json({
         success: true,
         data: {
-          message : `Modificada la categoría con el id : (${req.params.id})`,
+          message: `Modificada la categoría con el id : (${req.params.id})`,
           updated: req.body,
         },
       });
@@ -95,7 +94,7 @@ const deleteCategoria = dryFn(async (req, res, next) => {
       res.status(200).json({
         success: true,
         data: {
-          deleted: `Categoria con el id : ${req.params.id} eliminado`,
+          message: `Categoria con el id : ${req.params.id} eliminado`,
         },
       });
 
@@ -110,5 +109,5 @@ module.exports = {
   listCategorias,
   createCategorias,
   updateCategoria,
-  deleteCategoria
+  deleteCategoria,
 };

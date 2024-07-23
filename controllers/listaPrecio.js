@@ -10,6 +10,7 @@ const createListaPrecio = dryFn(async (req, res, next) => {
       res.status(201).json({
         success: true,
         data: {
+          message :  `Se creo la lista de precio (${req.body.nombre}) correctamente`,
           created: req.body,
         },
       });

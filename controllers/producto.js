@@ -10,6 +10,7 @@ const createProducto = dryFn(async (req, res, next) => {
       res.status(201).json({
         success: true,
         data: {
+          message: `Creado correctamente el producto con el código : (${req.params.codigo})`,
           created: req.body,
         },
       });
@@ -25,7 +26,8 @@ const updateProducto = dryFn(async (req, res, next) => {
   if (!productoValidate) {
     return next(
       new GeneralError(
-        `No existe producto con el código: (${req.params.codigo})`,404
+        `No existe producto con el código: (${req.params.codigo})`,
+        404
       )
     );
   }
@@ -39,7 +41,7 @@ const updateProducto = dryFn(async (req, res, next) => {
       res.status(200).json({
         success: true,
         data: {
-            message : `modificado el producto con el codigo : (${req.params.id})`,
+          message: `modificado el producto con el codigo : (${req.params.id})`,
           updated: req.body,
         },
       });
@@ -55,7 +57,8 @@ const deleteProducto = dryFn(async (req, res, next) => {
   if (!productoValidate) {
     return next(
       new GeneralError(
-        `No existe producto con el código: (${req.params.codigo})`,404
+        `No existe producto con el código: (${req.params.codigo})`,
+        404
       )
     );
   }
@@ -69,7 +72,7 @@ const deleteProducto = dryFn(async (req, res, next) => {
       res.status(200).json({
         success: true,
         data: {
-          deleted: req.body,
+          message: `Eliminado el producto con el código (${req.body.codigo})`,
         },
       });
       return p1;

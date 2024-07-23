@@ -1,5 +1,6 @@
 const sq = require("../database/connection");
 const { DataTypes } = require("sequelize");
+const ListaProducto = require("./ListaProducto");
 
 const Producto = sq.define(
   "Producto",
@@ -42,5 +43,21 @@ const Producto = sq.define(
     timestamps: true,
   }
 );
+
+Producto.hasMany(ListaProducto, {
+  foreignKey : {
+    allowNull : false,
+    name :  "fk_producto",
+  },
+  sourceKey : "codigo"
+});
+
+ListaProducto.belongsTo(Producto, {
+  foreignKey : {
+    allowNull : false,
+    name  : "fk_producto",
+  },
+  targetKey : "codigo"
+})
 
 module.exports = Producto;

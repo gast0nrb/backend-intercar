@@ -9,6 +9,7 @@ const createSucursal = dryFn(async(req, res, next) => {
         res.status(201).json({
             success : true, 
             data : {
+                message : `Creada correctamente la sucursal (${req.body.nombre})`,
                 created : req.body
             }
         })
@@ -30,7 +31,7 @@ const deleteSucursal = dryFn(async(req, res, next) => {
         res.status(200).json({
             success : true, 
             data : {
-                deleted : `Eliminada la sucursal con id ${req.params.id}`
+                message : `Eliminada la sucursal con id ${req.params.id}`
             }
         })
         return sucursal

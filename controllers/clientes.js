@@ -12,6 +12,7 @@ const createCliente = dryFn(async (req, res, next) => {
       res.status(201).json({
         success: true,
         data: {
+          message : `Cliente con el rut (${req.body.rut}) creado correctamente`,
           created: req.body,
         },
       });
