@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const sq = require("../database/connection");
 const dryFn = require("../middlewares/dryFn");
 const Categoria = require("../models/Categoria");
@@ -7,11 +8,41 @@ const Producto = require("../models/Producto");
 const { GeneralError } = require("../utils/classErrors");
 
 const getProductos = dryFn(async (req, res, next) => {
+  let whereObj = {};
+  if (Object.keys(req.query).length > 1) {
+    return next(
+      new GeneralError(
+        "El método solamente espera 1 parametro en el query, pueden ser (categoria,text,fecha), pero no mas de uno.",
+        400
+      )
+    );
+  }
+  if (req.query.categoria) {
+    whereObj = {
+      where: {
+        fk_categoria_producto: req.query.categoria,
+      },
+    };
+  }
+  if (req.query.text) {
+    whereObj = {
+      where: {
+        [Op.or]: {
+          titulo: { [Op.like]: `%${req.query.text}%` },
+          codigo: { [Op.like]: `%${req.query.text}%` },
+          descripcion: { [Op.like]: `%${req.query.text}%` },
+        },
+      },
+    };
+  }
+  const { where } = whereObj; //Deconstruimos la propiedad where para pasarla directamente
   const p = await Producto.findAll({
+    where,
     include: [
       { model: Categoria },
       { model: ListaProducto, include: ListaPrecio },
     ],
+    order: [["titulo", "ASC"]],
   });
   res.status(200).json({
     success: true,
