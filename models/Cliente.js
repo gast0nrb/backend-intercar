@@ -52,6 +52,13 @@ const Cliente = sq.define('Cliente', {
         type : DataTypes.STRING,
         defaultValue : "",
         allowNull : true
+    },
+    direccion : {
+        type : DataTypes.STRING,
+        allowNull : false,
+        validate : {
+            notEmpty : true,
+        }
     }
 }, {freezeTableName : true, timestamps : false})
 

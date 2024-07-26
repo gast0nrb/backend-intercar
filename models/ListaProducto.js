@@ -1,6 +1,6 @@
 const sq = require("../database/connection")
 const {DataTypes} = require("sequelize")
-
+const HistoriaPrecio = require("./HistoriaPrecio")
 
 const ListaProducto = sq.define('ListaProducto', {
      fk_producto : {
@@ -31,7 +31,11 @@ const ListaProducto = sq.define('ListaProducto', {
         max : 99
         }
     },
-},{timestamps : true})
+},{timestamps : true,
+})
 
-
+ListaProducto.addHook('beforeUpdate', (listP, options)=> {
+    console.log("hello from here")
+})
+    
 module.exports = ListaProducto;

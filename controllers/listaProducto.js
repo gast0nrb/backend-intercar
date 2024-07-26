@@ -22,7 +22,6 @@ const createPrecio = dryFn(async (req, res, next) => {
 });
 
 const updatePrecio = dryFn(async (req, res, next) => {
-  console.log(req.params.lista, req.params.codigo);
   const lpt1 = await ListaProducto.findAll({
     where: {
       fk_lista: req.params.lista,

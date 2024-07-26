@@ -33,10 +33,6 @@ const HistoriaPrecio = sq.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    fecha: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
   },
   {
     timestamps: false,
