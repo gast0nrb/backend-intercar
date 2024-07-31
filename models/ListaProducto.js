@@ -1,41 +1,44 @@
-const sq = require("../database/connection")
-const {DataTypes} = require("sequelize")
-const HistoriaPrecio = require("./HistoriaPrecio")
+const sq = require("../database/connection");
+const { DataTypes } = require("sequelize");
 
-const ListaProducto = sq.define('ListaProducto', {
-     fk_producto : {
-        type : DataTypes.STRING,
-        allowNull : false, 
-        primaryKey : true
-     },
-     fk_lista : {
-        type : DataTypes.INTEGER,
-        allowNull : false,
-        primaryKey : true
+const ListaProducto = sq.define(
+  "ListaProducto",
+  {
+    fk_producto: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      primaryKey: true,
     },
-    monto : {
-        type : DataTypes.INTEGER,
-        allowNull : false, 
+    fk_lista: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
     },
-    cantidad_min : {
-        type : DataTypes.INTEGER,
-        allowNull : false,
-        defaultValue : 1
+    monto: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
-    descuento : {
-        type : DataTypes.INTEGER,
-        allowNull :  true,
-        defaultValue : 0,
-        validate : {
-        min : 0,
-        max : 99
-        }
+    cantidad_min: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1,
     },
-},{timestamps : true,
-})
+    descuento: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: 0,
+      validate: {
+        min: 0,
+        max: 99,
+      },
+    },
+    barra: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: "",
+    },
+  },
+  { timestamps: true }
+);
 
-ListaProducto.addHook('beforeUpdate', (listP, options)=> {
-    console.log("hello from here")
-})
-    
 module.exports = ListaProducto;
