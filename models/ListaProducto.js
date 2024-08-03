@@ -38,7 +38,8 @@ const ListaProducto = sq.define(
       defaultValue: "",
     },
   },
-  { timestamps: true }
+  { timestamps: true}
 );
+
 
 module.exports = ListaProducto;

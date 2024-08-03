@@ -4,9 +4,12 @@ const {
   deleteProducto,
   updateProducto,
   getProductos,
+  getProducto,
 } = require("../controllers/producto");
 
 const { createPrecio, updatePrecio } = require("../controllers/listaProducto");
+
+const {getHistoriales } = require("../controllers/historiaPrecio")
 
 //instancia
 const router = Router();
@@ -15,12 +18,15 @@ router.route("/productos").get(getProductos).post(createProducto);
 
 router
   .route("/productos/:codigo")
-  .get()
+  .get(getProducto)
   .put(updateProducto)
   .delete(deleteProducto);
 
 //Rutas para modificar los precios de los productos
 router.route("/productos/precios").post(createPrecio);
 router.route("/productos/:codigo/precios/:lista").put(updatePrecio);
+
+//ruta para obtener el historial de los productos
+  router.route("/historiales/productos").get(getHistoriales)
 
 module.exports = router;

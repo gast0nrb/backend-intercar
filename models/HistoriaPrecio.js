@@ -33,6 +33,23 @@ const HistoriaPrecio = sq.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    barra : {
+      type : DataTypes.STRING,
+      allowNull : true,
+      defaultValue : ""
+    },
+    createdAt : {
+      type : DataTypes.DATE,
+      allowNull : false
+    },
+    updatedAt : {
+      type : DataTypes.DATE,
+      allowNull : false
+    },
+    deleted : {
+      type : DataTypes.BOOLEAN,
+      allowNull : false  
+    }
   },
   {
     timestamps: false,

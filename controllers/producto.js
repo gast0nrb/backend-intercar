@@ -129,9 +129,28 @@ const deleteProducto = dryFn(async (req, res, next) => {
     });
 });
 
+const getProducto = dryFn(async(req,res, next)=> {
+  const producto = await Producto.findByPk(req.params.codigo, {include : [
+    {model : Categoria},
+    {model : ListaProducto, include : ListaPrecio }
+  ]});
+  if(!producto) {
+    return next(new GeneralError(`No existe producto con el código : (${req.params.codigo})`, 404));
+  }
+
+  res.status(200).json({
+    success : true, 
+    data : {
+      len : producto.length,
+      producto
+    }
+  })
+})
+
 module.exports = {
   deleteProducto,
   createProducto,
   updateProducto,
   getProductos,
+  getProducto
 };

@@ -41,6 +41,7 @@ const Producto = sq.define(
   },
   {
     timestamps: true,
+    freezeTableName : true
   }
 );
 

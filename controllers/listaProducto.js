@@ -44,6 +44,8 @@ const updatePrecio = dryFn(async (req, res, next) => {
           fk_lista: req.params.lista,
         },
       });
+
+      
       res.status(200).json({
         success: true,
         data: {
