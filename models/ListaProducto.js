@@ -32,11 +32,6 @@ const ListaProducto = sq.define(
         max: 99,
       },
     },
-    barra: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      defaultValue: "",
-    },
   },
   { timestamps: true}
 );

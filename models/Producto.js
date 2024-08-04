@@ -38,6 +38,11 @@ const Producto = sq.define(
       allowNull: true,
       defaultValue: "/defaultImage.png",
     },
+    barra : {
+      type : DataTypes.STRING,
+      allowNull : true, 
+      defaultValue : ""
+    }
   },
   {
     timestamps: true,

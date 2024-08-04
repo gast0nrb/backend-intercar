@@ -1,0 +1,34 @@
+const qryOfertas = `
+SELECT MAX(HP.ID) AS 'ULTIMO ID',
+HP.fk_lp, 
+LS.nombre ,
+HP.fk_producto,
+P.titulo,
+P.descripcion,
+P.stock,
+P.file,
+P.barra,
+P.createdAt,
+P.updatedAt,
+C.id,
+C.nombre,
+LP.monto,
+LP.cantidad_min,
+LP.descuento
+FROM HistoriaPrecios HP
+JOIN ListaProductos LP 
+ON LP.fk_lista  = HP.fk_lp AND
+LP.fk_producto  = HP.fk_producto
+JOIN Producto P
+ON LP.fk_producto = P.codigo 
+JOIN CATEGORIA C
+ON C.id =  P.fk_categoria_producto
+JOIN ListaPrecios LS 
+ON LP.fk_lista = LS.id 
+WHERE HP.monto > LP.monto 
+OR LP.descuento >1
+GROUP BY HP.fk_producto, HP.fk_lp;
+  `;
+
+
+module.exports = qryOfertas;

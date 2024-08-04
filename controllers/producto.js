@@ -5,7 +5,20 @@ const Categoria = require("../models/Categoria");
 const ListaPrecio = require("../models/ListaPrecio");
 const ListaProducto = require("../models/ListaProducto");
 const Producto = require("../models/Producto");
+const HistoriaPrecio = require("../models/HistoriaPrecio");
 const { GeneralError } = require("../utils/classErrors");
+const qryOfertas = require("../database/querys");
+
+const getOfertas = dryFn(async (req, res, next) => {
+  const ofertas = await sq.query(qryOfertas, {
+    nest: true,
+  });
+  res.status(200).json({
+    success: true,
+    len: ofertas.length,
+    data: ofertas,
+  });
+});
 
 const getProductos = dryFn(async (req, res, next) => {
   let whereObj = {};
@@ -129,28 +142,36 @@ const deleteProducto = dryFn(async (req, res, next) => {
     });
 });
 
-const getProducto = dryFn(async(req,res, next)=> {
-  const producto = await Producto.findByPk(req.params.codigo, {include : [
-    {model : Categoria},
-    {model : ListaProducto, include : ListaPrecio }
-  ]});
-  if(!producto) {
-    return next(new GeneralError(`No existe producto con el código : (${req.params.codigo})`, 404));
+const getProducto = dryFn(async (req, res, next) => {
+  const producto = await Producto.findByPk(req.params.codigo, {
+    include: [
+      { model: Categoria },
+      { model: ListaProducto, include: ListaPrecio },
+    ],
+  });
+  if (!producto) {
+    return next(
+      new GeneralError(
+        `No existe producto con el código : (${req.params.codigo})`,
+        404
+      )
+    );
   }
 
   res.status(200).json({
-    success : true, 
-    data : {
-      len : producto.length,
-      producto
-    }
-  })
-})
+    success: true,
+    data: {
+      len: producto.length,
+      producto,
+    },
+  });
+});
 
 module.exports = {
   deleteProducto,
   createProducto,
   updateProducto,
   getProductos,
-  getProducto
+  getProducto,
+  getOfertas,
 };
