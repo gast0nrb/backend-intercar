@@ -1,6 +1,7 @@
 const sq = require("../database/connection");
 const { DataTypes } = require("sequelize");
 const ListaProducto = require("./ListaProducto");
+const DetalleCarro = require("./DetalleCarro");
 
 const Producto = sq.define(
   "Producto",
@@ -38,32 +39,47 @@ const Producto = sq.define(
       allowNull: true,
       defaultValue: "/defaultImage.png",
     },
-    barra : {
-      type : DataTypes.STRING,
-      allowNull : true, 
-      defaultValue : ""
-    }
+    barra: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: "",
+    },
   },
   {
     timestamps: true,
-    freezeTableName : true
+    freezeTableName: true,
   }
 );
 
 Producto.hasMany(ListaProducto, {
-  foreignKey : {
-    allowNull : false,
-    name :  "fk_producto",
+  foreignKey: {
+    allowNull: false,
+    name: "fk_producto",
   },
-  sourceKey : "codigo"
+  sourceKey: "codigo",
 });
 
 ListaProducto.belongsTo(Producto, {
-  foreignKey : {
-    allowNull : false,
-    name  : "fk_producto",
+  foreignKey: {
+    allowNull: false,
+    name: "fk_producto",
   },
-  targetKey : "codigo"
-})
+  targetKey: "codigo",
+});
+
+Producto.hasMany(DetalleCarro, {
+  foreignKey: {
+    name: "fk_producto",
+    allowNull: false,
+  },
+  sourceKey: "codigo",
+});
+
+DetalleCarro.belongsTo(Producto, {
+  foreignKey: {
+    name: "fk_producto",
+    allowNull: false,
+  },
+});
 
 module.exports = Producto;
