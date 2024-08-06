@@ -41,6 +41,10 @@ const DetalleCarro = sq.define(
         notEmpty: true,
       },
     },
+    monto : {
+      type : DataTypes.INTEGER,
+      allowNull : false
+    }
   },
   { timestamps: true, freezeTableName: true, paranoid: true }
 );

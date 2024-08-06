@@ -14,6 +14,7 @@ const r_sucursales = require("./routes/r_sucursales");
 const r_clientes = require("./routes/r_clientes");
 const r_productos = require("./routes/r_productos");
 const r_listaPrecio = require("./routes/r_listaPrecio");
+const r_carro = require("./routes/r_carro")
 
 //Instancias
 const app = express()
@@ -34,6 +35,7 @@ app.use("/api/v0.5/webintercar", r_sucursales);
 app.use("/api/v0.5/webintercar", r_clientes);
 app.use("/api/v0.5/webintercar", r_productos);
 app.use("/api/v0.5/webintercar", r_listaPrecio);
+app.use("/api/v0.5/webintercar", r_carro);
 
 
 //Error handlers

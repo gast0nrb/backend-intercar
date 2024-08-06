@@ -30,5 +30,15 @@ OR LP.descuento >1
 GROUP BY HP.fk_producto, HP.fk_lp;
   `;
 
+const qryCarros = `
+SELECT C.ID, C.REVISADO,
+C.fk_cliente, SUM(DC.monto),
+COUNT(DC.fk_producto) 
+FROM Carro C
+JOIN DetalleCarro DC
+ON DC.fk_carro = C.id 
+group by DC.fk_carro , DC.fk_producto 
+`;
+
 
 module.exports = qryOfertas;
