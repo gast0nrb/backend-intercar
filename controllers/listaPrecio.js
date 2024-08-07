@@ -1,7 +1,7 @@
 const sq = require("../database/connection");
 const ListaPrecio = require("../models/ListaPrecio");
 const dryFn = require("../middlewares/dryFn");
-const {GeneralError} = require("../utils/classErrors");
+const { GeneralError } = require("../utils/classErrors");
 
 const createListaPrecio = dryFn(async (req, res, next) => {
   const t = sq
@@ -10,7 +10,7 @@ const createListaPrecio = dryFn(async (req, res, next) => {
       res.status(201).json({
         success: true,
         data: {
-          message :  `Se creo la lista de precio (${req.body.nombre}) correctamente`,
+          message: `Se creo la lista de precio (${req.body.nombre}) correctamente`,
           created: req.body,
         },
       });
@@ -72,7 +72,7 @@ const updateListaPrecio = dryFn(async (req, res, next) => {
         success: true,
         data: {
           message: `Modificada lista precio con el id (${req.params.id})`,
-          modified : req.body
+          modified: req.body,
         },
       });
       return lp;
@@ -84,9 +84,9 @@ const updateListaPrecio = dryFn(async (req, res, next) => {
 
 const getListasPrecio = dryFn(async (req, res, next) => {
   const lp = await ListaPrecio.findAll();
-  if(lp.length == 0) {
-    return next(new GeneralError(`No se encontraron listas de precio`, 404))
-}
+  if (lp.length == 0) {
+    return next(new GeneralError(`No se encontraron listas de precio`, 404));
+  }
   res.status(200).json({
     success: true,
     len: lp.length,

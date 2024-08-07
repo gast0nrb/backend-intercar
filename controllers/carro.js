@@ -25,6 +25,7 @@ const updateCarro = dryFn(async (req, res, next) => {
           updated: req.body,
         },
       });
+      return carro;
     })
     .catch((e) => {
       return next(e);
@@ -48,6 +49,13 @@ const deleteCarro = dryFn(async (req, res, next) => {
           id: req.params.id,
         },
       });
+      res.status(200).json({
+        success: true,
+        data: {
+          message: `Se elimino el carro con el id: (${req.params.id}) correctamente`,
+        },
+      });
+      return carro;
     })
     .catch((e) => {
       return next(e);
@@ -65,6 +73,7 @@ const createCarro = dryFn(async (req, res, next) => {
           created: req.body,
         },
       });
+      return carro;
     })
     .catch((e) => {
       return next(e);
@@ -72,11 +81,6 @@ const createCarro = dryFn(async (req, res, next) => {
 });
 
 const getCarros = dryFn(async (req, res, next) => {
-  const carros = await Carro.findAll({
-    where: {
-      fk_cliente: req.params.rut,
-    },
-  });
   if (carros.length == 0) {
     return next(
       new GeneralError(
@@ -98,5 +102,4 @@ const getCarro = dryFn(async (req, res, next) => {
   });
 });
 
-
-module.exports = { getCarro,getCarros,createCarro,deleteCarro,updateCarro}
+module.exports = { getCarro, getCarros, createCarro, deleteCarro, updateCarro };

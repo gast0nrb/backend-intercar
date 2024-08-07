@@ -12,7 +12,7 @@ const createCliente = dryFn(async (req, res, next) => {
       res.status(201).json({
         success: true,
         data: {
-          message : `Cliente con el rut (${req.body.rut}) creado correctamente`,
+          message: `Cliente con el rut (${req.body.rut}) creado correctamente`,
           created: req.body,
         },
       });
@@ -43,7 +43,7 @@ const updateCliente = dryFn(async (req, res, next) => {
       res.status(200).json({
         success: true,
         data: {
-          message : `Modificado el cliente con el rut : (${req.params.id})`,
+          message: `Modificado el cliente con el rut : (${req.params.id})`,
           updated: req.body,
         },
       });
