@@ -25,11 +25,6 @@ const Producto = sq.define(
         notEmpty: true,
       },
     },
-    stock: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      defaultValue: 0,
-    },
     activo: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

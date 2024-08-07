@@ -1,6 +1,7 @@
 const sq = require("../database/connection");
 const { DataTypes } = require("sequelize");
 const Carro = require("./Carro");
+const Usuario = require("./Usuario");
 
 const Cliente = sq.define(
   "Cliente",
@@ -35,21 +36,6 @@ const Cliente = sq.define(
       allowNull: true,
       defaultValue: 0,
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      //Agregar regex validadora
-    },
-    hash: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    aceptado: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-      allowNull: true,
-    },
     giro: {
       type: DataTypes.STRING,
       defaultValue: "",
@@ -81,5 +67,23 @@ Carro.belongsTo(Cliente, {
   },
   targetKey: "rut",
 });
+
+Cliente.hasMany(Usuario, {
+  foreignKey : {
+    name : "fk_cliente_usuario",
+    allowNull : true
+  },
+  sourceKey : "rut"
+})
+
+Usuario.belongsTo(Cliente, {
+  foreignKey : {
+    name : "fk_cliente_usuario",
+    allowNull : true
+  },
+  targetKey : "rut"
+})
+
+
 
 module.exports = Cliente;
