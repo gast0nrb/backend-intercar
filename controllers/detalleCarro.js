@@ -25,7 +25,7 @@ const updateDetalleCarro = dryFn(async (req, res, next) => {
   const dc1 = await DetalleCarro.findAll({
     where: {
       fk_carro: req.params.carro,
-      fk_producto: req.params.codigo,
+      fk_producto: req.params.producto,
     },
   });
   if (dc1.length == 0)
@@ -40,14 +40,14 @@ const updateDetalleCarro = dryFn(async (req, res, next) => {
       const dcarro = await DetalleCarro.update(req.body, {
         where: {
           fk_carro: req.params.carro,
-          fk_producto: req.params.codigo,
+          fk_producto: req.params.producto,
         },
       });
 
       res.status(200).json({
         success: true,
         data: {
-          message: `Se modifico el producto con el código (${req.params.codig}) en el carro con id (${req.params.carro}) correctamente`,
+          message: `Se modifico el producto con el código (${req.params.producto}) en el carro con id (${req.params.carro}) correctamente`,
         },
       });
       return dcarro;

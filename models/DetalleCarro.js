@@ -49,4 +49,8 @@ const DetalleCarro = sq.define(
   { timestamps: true, freezeTableName: true, paranoid: true }
 );
 
+DetalleCarro.afterValidate('llsls', (k)=>{
+  
+})
+
 module.exports = DetalleCarro;

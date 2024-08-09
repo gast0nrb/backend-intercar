@@ -69,7 +69,7 @@ const createCarro = dryFn(async (req, res, next) => {
       res.status(201).json({
         success: true,
         data: {
-          message: `Se creo el carro con el id (${req.params.id}) satisfactoriamente`,
+          message: `Se creo el carro satisfactoriamente`,
           created: req.body,
         },
       });
