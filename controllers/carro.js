@@ -1,6 +1,7 @@
 const sq = require("../database/connection");
 const dryFn = require("../middlewares/dryFn");
 const Carro = require("../models/Carro");
+const DetalleCarro = require("../models/DetalleCarro");
 const { GeneralError } = require("../utils/classErrors");
 
 const updateCarro = dryFn(async (req, res, next) => {
@@ -98,8 +99,23 @@ const getCarros = dryFn(async (req, res, next) => {
 
 const getCarro = dryFn(async (req, res, next) => {
   const carro = await Carro.findAll({
-    where: {},
+    where: {
+      id : req.params.id
+    },
+    include : [
+      {model : DetalleCarro}
+    ]
   });
+
+  if(!carro) {
+    return next(new GeneralError(`No se encontró un carro con el id (${req.params.id})`,404))
+  }
+
+  res.status(200).json({
+    success : true, 
+    len : carro.length,
+    data : carro
+  })
 });
 
 module.exports = { getCarro, getCarros, createCarro, deleteCarro, updateCarro };

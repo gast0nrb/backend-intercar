@@ -50,7 +50,7 @@ const DetalleCarro = sq.define(
 );
 
 DetalleCarro.afterValidate('llsls', (k)=>{
-  
+ console.log(k) 
 })
 
 module.exports = DetalleCarro;

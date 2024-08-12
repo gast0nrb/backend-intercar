@@ -45,3 +45,61 @@ FOR EACH ROW
 		old.barra,
 		true
 	)
+
+
+CREATE TRIGGER HISTORIA_CARRO
+AFTER INSERT
+ON DetalleCarro
+FOR EACH ROW
+	INSERT INTO HistoriaCarro
+	(fk_carro, 
+	fk_producto,
+	cantidad,
+	id_lista,
+	nombre_lista,
+	descuento,
+	descripcion,
+	monto,
+	createdAt,
+	updatedAt)
+	VALUES (
+		new.fk_carro,
+		new.fk_producto,
+		new.cantidad,
+		new.id_lista,
+		new.nombre_lista,
+		new.descuento,
+		new.descripcion,
+		new.monto,
+		new.createdAt,
+		new.updatedAt
+	)
+
+	CREATE TRIGGER HISTORIA_CARRO_UPDATE
+AFTER UPDATE
+ON DetalleCarro
+FOR EACH ROW
+	INSERT INTO HistoriaCarro
+	(fk_carro, 
+	fk_producto,
+	cantidad,
+	id_lista,
+	nombre_lista,
+	descuento,
+	descripcion,
+	monto,
+	createdAt,
+	updatedAt)
+	VALUES (
+		new.fk_carro,
+		new.fk_producto,
+		new.cantidad,
+		new.id_lista,
+		new.nombre_lista,
+		new.descuento,
+		new.descripcion,
+		new.monto,
+		new.createdAt,
+		new.updatedAt
+	)
+	

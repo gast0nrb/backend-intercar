@@ -16,7 +16,7 @@ const {
 
 const router = Router();
 
-router.route("/carros/:id").put(updateCarro).delete(deleteCarro);
+router.route("/carros/:id").put(updateCarro).delete(deleteCarro).get(getCarro);
 
 router.route("/carros").post(createCarro);
 
