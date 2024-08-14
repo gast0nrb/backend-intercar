@@ -1,6 +1,7 @@
 const sq = require("../database/connection");
 const dryFn = require("../middlewares/dryFn");
 const Carro = require("../models/Carro");
+const HistoriaCarro = require("../models/HistoriaCarro")
 const DetalleCarro = require("../models/DetalleCarro");
 const { GeneralError } = require("../utils/classErrors");
 
@@ -82,14 +83,34 @@ const createCarro = dryFn(async (req, res, next) => {
 });
 
 const getCarros = dryFn(async (req, res, next) => {
-  if (carros.length == 0) {
+  let queryWhere = "";
+  if (req.query.rut) {
+    queryWhere = ` where cr.fk_cliente = '${req.query.rut}' `;
+  }
+
+  const carros = await sq.query(
+    `
+  SELECT sum((dc.monto * dc.cantidad)) as 'Monto total carro',
+  dc.fk_carro, count(id) as 'Cantidad productos',
+  cr.createdAt,
+  cr.revisado,
+  cr.fk_cliente
+  from DetalleCarro dc 
+  join Carro cr
+  on cr.id = dc.fk_carro 
+  ${queryWhere}
+  group by dc.fk_carro 
+  `,
+    { nest: true }
+  );
+  if (carros.length == 0 && req.query.rut) {
     return next(
       new GeneralError(
-        `No se encontrarón carros para el rut especificado : (${req.params.rut})`,
-        404
+        `No se encontrarón carros asociados al rut (${req.query.rut})`
       )
     );
   }
+
   res.status(200).json({
     success: true,
     len: carros.length,
@@ -100,22 +121,32 @@ const getCarros = dryFn(async (req, res, next) => {
 const getCarro = dryFn(async (req, res, next) => {
   const carro = await Carro.findAll({
     where: {
-      id : req.params.id
+      id: req.params.id,
     },
-    include : [
-      {model : DetalleCarro}
-    ]
+    include: [{ model: DetalleCarro }],
   });
 
-  if(!carro) {
-    return next(new GeneralError(`No se encontró un carro con el id (${req.params.id})`,404))
+  const historiaCarro = await HistoriaCarro.findAll({where : {
+    fk_carro : req.params.id
+  }}) 
+
+  if (!carro) {
+    return next(
+      new GeneralError(
+        `No se encontró un carro con el id (${req.params.id})`,
+        404
+      )
+    );
   }
 
   res.status(200).json({
-    success : true, 
-    len : carro.length,
-    data : carro
-  })
+    success: true,
+    len: carro.length,
+    data: {
+      carro,
+      historiaCarro
+    },
+  });
 });
 
 module.exports = { getCarro, getCarros, createCarro, deleteCarro, updateCarro };

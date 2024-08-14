@@ -16,13 +16,19 @@ const {
 
 const router = Router();
 
+
+//Solo un carro
 router.route("/carros/:id").put(updateCarro).delete(deleteCarro).get(getCarro);
 
-router.route("/carros").post(createCarro);
+//Post un carro
+router.route("/carros").post(createCarro).get(getCarros);
 
-//Detalle carro (producto x carro)
+
+
+//Editar articulo carro (producto x carro)
 router.route("/carros/:carro/:producto").put(updateDetalleCarro);
 
+//Agregar articulo al carro
 router.route("/carro/detalle").post(createDetalleCarro);
 
 //historia carro

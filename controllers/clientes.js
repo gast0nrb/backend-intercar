@@ -43,7 +43,7 @@ const updateCliente = dryFn(async (req, res, next) => {
       res.status(200).json({
         success: true,
         data: {
-          message: `Modificado el cliente con el rut : (${req.params.id})`,
+          message: `Modificado el cliente con el rut : (${req.params.rut})`,
           updated: req.body,
         },
       });
