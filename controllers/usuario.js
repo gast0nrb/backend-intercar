@@ -4,15 +4,28 @@ const sq = require("../database/connection");
 const Usuario = require("../models/Usuario");
 
 const createUser = dryFn(async (req, res, next) => {
+  const u1 = await Usuario.findOne({
+    where: {
+      email: req.body.email,
+    },
+  });
+
+  if (u1) {
+    return next(
+      new GeneralError(`El correo ingresado ya tiene un usuario asociado`, 400)
+    );
+  }
+
   const t = sq
     .transaction(async () => {
       const user = await Usuario.create(req.body);
-
       res.status(201).json({
         success: true,
         data: {
           message: `Creado el usuario con el email : (${req.body.email})`,
-          created: req.body,
+          created: {
+            email : req.body.email
+          }
         },
       });
       return user;

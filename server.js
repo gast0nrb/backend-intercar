@@ -26,6 +26,7 @@ testConn();
 
 //Middlewares para las rutas
 app.use(express.json())
+app.use(express.urlencoded({extended : true}))
 
 //rutas
 app.use("/api/v0.5/webintercar", r_categoria);

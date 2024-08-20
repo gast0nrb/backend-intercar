@@ -1,5 +1,6 @@
 const sq = require("../database/connection")
 const {DataTypes} =  require("sequelize")
+const bcryp = require("bcrypt")
 
 const Usuario = sq.define('Usuario',{
     id : {
@@ -41,5 +42,10 @@ const Usuario = sq.define('Usuario',{
     paranoid : true
 });
 
+Usuario.beforeCreate(async function(user, options){
+    const salt = await bcryp.genSalt(10)
+    const hash = await bcryp.hash(user.passwd, salt)
+    user.passwd =  hash
+})
 
 module.exports = Usuario;
