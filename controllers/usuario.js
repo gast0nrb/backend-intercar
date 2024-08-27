@@ -2,6 +2,24 @@ const { GeneralError } = require("../utils/classErrors");
 const dryFn = require("../middlewares/dryFn");
 const sq = require("../database/connection");
 const Usuario = require("../models/Usuario");
+const generateToken = require("../utils/generateToken");
+const comparePass = require("../utils/auth");
+
+const authUser = dryFn(async (req, res, next) => {
+  const u1 = await Usuario.findOne({ where: { email: req.body.email } });
+
+  if (!u1 || !await comparePass(req.body.passwd, u1.passwd)) {
+    return next(new GeneralError("Correo o contraseña invalida", 401));
+  }
+
+  generateToken(res, u1.nombre);
+  res.status(200).json({
+    success: true,
+    data: {
+      message: "Log correctamente",
+    },
+  });
+});
 
 const createUser = dryFn(async (req, res, next) => {
   const u1 = await Usuario.findOne({
@@ -19,13 +37,14 @@ const createUser = dryFn(async (req, res, next) => {
   const t = sq
     .transaction(async () => {
       const user = await Usuario.create(req.body);
+      generateToken(res, req.body.nombre);
       res.status(201).json({
         success: true,
         data: {
           message: `Creado el usuario con el email : (${req.body.email})`,
           created: {
-            email : req.body.email
-          }
+            email: req.body.email,
+          },
         },
       });
       return user;
@@ -105,4 +124,5 @@ module.exports = {
   deleteUser,
   updateUser,
   createUser,
+  authUser,
 };

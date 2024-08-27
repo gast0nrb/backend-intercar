@@ -11,10 +11,17 @@ const Usuario = sq.define('Usuario',{
     },
     email : {
         type : DataTypes.STRING,
-        allowNull : true,
+        allowNull : false,
         unique : true,
         validate : {
             isEmail : true
+        }
+    },
+    nombre : {
+        type : DataTypes.STRING,
+        allowNull : false,
+        validate : {
+            notEmpty : true
         }
     },
     aceptado : {
