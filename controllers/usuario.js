@@ -5,14 +5,28 @@ const Usuario = require("../models/Usuario");
 const generateToken = require("../utils/generateToken");
 const comparePass = require("../utils/auth");
 
+const logOut = dryFn(async (req, res, next) => {
+  res.cookie("catjwt", "", {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+
+  res.status(200).json({
+    success: true,
+    data: {
+      mesage: "Saliste de tu cuenta.",
+    },
+  });
+});
+
 const authUser = dryFn(async (req, res, next) => {
   const u1 = await Usuario.findOne({ where: { email: req.body.email } });
 
-  if (!u1 || !await comparePass(req.body.passwd, u1.passwd)) {
+  if (!u1 || !(await comparePass(req.body.passwd, u1.passwd))) {
     return next(new GeneralError("Correo o contraseña invalida", 401));
   }
 
-  generateToken(res, u1.nombre);
+  generateToken(res, u1.id, u1.fk_permiso);
   res.status(200).json({
     success: true,
     data: {
