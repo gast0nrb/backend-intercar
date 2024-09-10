@@ -12,6 +12,8 @@ const router = Router();
 //Auth
 router.route("/login").post(authUser);
 
+//Crear logout
+
 //create user
 
 router.route("/usuarios").get(getUsuarios).post(createUser);

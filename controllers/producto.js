@@ -8,6 +8,72 @@ const Producto = require("../models/Producto");
 const HistoriaPrecio = require("../models/HistoriaPrecio");
 const { GeneralError } = require("../utils/classErrors");
 const qryOfertas = require("../database/querys");
+const fs = require("fs");
+
+const deletePhoto = dryFn(async (req, res, next) => {
+  const producto = await Producto.findByPk(req.params.codigo);
+  if (!producto) {
+    return next(
+      new GeneralError(
+        "No existe producto con el codigo indicado : (" +
+          req.params.codigo +
+          ")",
+        404
+      )
+    );
+  }
+  const filepath = producto.file;
+  fs.unlink(filepath, (err) => {
+    if (err) {
+      return next(
+        new GeneralError(
+          `Problemas al eliminar la imagen con ruta (${filepath})`
+        )
+      );
+    }
+  });
+  const t = sq
+    .transaction(async (t) => {
+      const p1 = await Producto.update(
+        { file: "" },
+        { where: { codigo: req.params.codigo } }
+      );
+      console.log(filepath);
+      res.status(200).json({
+        success: true,
+        data: {
+          message: `Se eliino la imagen con ruta (${filepath}) correctamente`,
+        },
+      });
+      return t;
+    })
+    .catch((e) => next(e));
+});
+
+//Solamente puede ser llamada si el producto ya existe.
+const postPhoto = dryFn(async (req, res, next) => {
+  const t = sq
+    .transaction(async () => {
+      const p1 = await Producto.update(
+        { file: req.file.destination + req.file.filename },
+        {
+          where: {
+            codigo: req.params.codigo,
+          },
+        }
+      );
+      res.status(200).json({
+        success: true,
+        data: {
+          message: "Se grabo correctamente el archivo indicado.",
+        },
+      });
+      return t;
+    })
+    .catch((e) => {
+      return next(e);
+    });
+});
 
 const getOfertas = dryFn(async (req, res, next) => {
   const ofertas = await sq.query(qryOfertas, {
@@ -174,4 +240,6 @@ module.exports = {
   getProductos,
   getProducto,
   getOfertas,
+  postPhoto,
+  deletePhoto,
 };
