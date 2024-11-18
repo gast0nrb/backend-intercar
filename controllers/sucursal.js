@@ -1,5 +1,7 @@
 const dryFn = require("../middlewares/dryFn");
 const Sucursal = require("../models/Sucursal");
+const Comuna = require("../models/Comuna")
+const Ciudad = require("../models/Ciudad")
 const { GeneralError } = require("../utils/classErrors");
 const sq = require("../database/connection");
 
@@ -89,7 +91,7 @@ const getSucursal = dryFn(async (req, res, next) => {
 });
 
 const getSucursales = dryFn(async (req, res, next) => {
-  const sucursales = await Sucursal.findAll();
+  const sucursales = await Sucursal.findAll({include : {model : Comuna, include : Ciudad }});
   if (sucursales.length == 0) {
     return next(new GeneralError("No se han encontrado sucursales", 404));
   }

@@ -3,6 +3,7 @@ const express = require("express");
 const dotenv = require("dotenv").config();
 const testConn = require("./database/testConn");
 const cookieParser = require("cookie-parser");
+const cors = require("cors")
 
 //Modulos propios
 const { handleErrors, logError } = require("./middlewares/errorHandler");
@@ -27,6 +28,7 @@ const PORT = process.env.PORT || 8080;
 testConn();
 
 //Middlewares para las rutas
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
