@@ -5,7 +5,6 @@ const Categoria = require("../models/Categoria");
 const ListaPrecio = require("../models/ListaPrecio");
 const ListaProducto = require("../models/ListaProducto");
 const Producto = require("../models/Producto");
-const HistoriaPrecio = require("../models/HistoriaPrecio");
 const { GeneralError } = require("../utils/classErrors");
 const qryOfertas = require("../database/querys");
 const fs = require("fs");
