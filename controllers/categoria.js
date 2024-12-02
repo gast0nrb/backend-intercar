@@ -1,7 +1,27 @@
 const Categoria = require("../models/Categoria");
+const Producto = require("../models/Producto");
+const ListaPrecio = require("../models/ListaPrecio");
 const sq = require("../database/connection");
 const { GeneralError } = require("../utils/classErrors");
 const dryFn = require("../middlewares/dryFn");
+const ListaProducto = require("../models/ListaProducto");
+
+const getProductosByCategoria = dryFn(async (req, res, next) => {
+  const productos = await Categoria.findByPk(req.params.id, {
+    include : [{model : Producto, include : {model : ListaProducto, include : ListaPrecio}}]
+  });
+
+  if (!productos) {
+    return next(
+      new GeneralError(`No existe la categoría con id: ${req.params.id}`, 404)
+    );
+  }
+
+  res.status(200).json({
+    success: true,
+    data: productos,
+  });
+});
 
 //puede recibir un limit
 const listCategorias = dryFn(async (req, res, next) => {
@@ -110,4 +130,5 @@ module.exports = {
   createCategorias,
   updateCategoria,
   deleteCategoria,
+  getProductosByCategoria,
 };

@@ -90,17 +90,10 @@ const getProductos = dryFn(async (req, res, next) => {
   if (Object.keys(req.query).length > 1) {
     return next(
       new GeneralError(
-        "El método solamente espera 1 parametro en el query, pueden ser (categoria,text,fecha), pero no mas de uno.",
+        "El método solamente espera 1 parametro en el query, pueden ser (text,fecha), pero no mas de uno.",
         400
       )
     );
-  }
-  if (req.query.categoria) {
-    whereObj = {
-      where: {
-        fk_categoria_producto: req.query.categoria,
-      },
-    };
   }
   if (req.query.text) {
     whereObj = {
