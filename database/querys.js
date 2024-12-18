@@ -1,3 +1,4 @@
+//Trae los productos en oferta con la lista de precio con id 2, que es la de detalle
 const qryOfertas = `
 SELECT MAX(HP.ID) AS 'ULTIMO_ID',
 HP.fk_lp, 
@@ -10,7 +11,6 @@ P.barra,
 P.createdAt,
 P.updatedAt,
 P.file,
-C.id,
 C.nombre as 'Nombre_categoria',
 C.id as 'id_categoria',
 LP.monto,
@@ -26,9 +26,10 @@ JOIN CATEGORIA C
 ON C.id =  P.fk_categoria_producto
 JOIN ListaPrecios LS 
 ON LP.fk_lista = LS.id 
-WHERE HP.monto > LP.monto 
-OR LP.descuento >1
-GROUP BY HP.fk_producto, HP.fk_lp;
+WHERE HP.monto > LP.monto
+or HP.descuento > 0
+GROUP BY HP.fk_producto, HP.fk_lp
+having HP.fk_lp = 2 ;
   `;
 
 const qryCarros = `
@@ -40,6 +41,5 @@ JOIN DetalleCarro DC
 ON DC.fk_carro = C.id 
 group by DC.fk_carro , DC.fk_producto 
 `;
-
 
 module.exports = qryOfertas;
