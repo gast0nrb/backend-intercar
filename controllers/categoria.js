@@ -26,7 +26,7 @@ const getProductosByCategoria = dryFn(async (req, res, next) => {
 //puede recibir un limit
 const listCategorias = dryFn(async (req, res, next) => {
   let queryParams = {
-    order: [["nombre", "ASC"]],
+    order: [["id", "ASC"]],
   };
   if (req.query.limit) {
     queryParams = { ...queryParams, limit: parseInt(req.query.limit) };
