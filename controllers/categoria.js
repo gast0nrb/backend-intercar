@@ -8,7 +8,7 @@ const ListaProducto = require("../models/ListaProducto");
 
 const getProductosByCategoria = dryFn(async (req, res, next) => {
   const productos = await Categoria.findByPk(req.params.id, {
-    include : [{model : Producto, include : {model : ListaProducto, include : ListaPrecio}}]
+    include : [{model : Producto,  include : {model : ListaProducto, include : ListaPrecio}}],
   });
 
   if (!productos) {
@@ -19,6 +19,7 @@ const getProductosByCategoria = dryFn(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
+    len: productos.Productos.length,
     data: productos,
   });
 });
