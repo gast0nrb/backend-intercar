@@ -8,6 +8,26 @@ const Producto = require("../models/Producto");
 const { GeneralError } = require("../utils/classErrors");
 const qryOfertas = require("../database/querys");
 const fs = require("fs");
+const path = require("path")
+
+
+const getPhoto = dryFn(async(req, res, next)=> {
+  const producto = await Producto.findByPk(req.params.id);
+  if (!producto) {
+    return next (
+      new GeneralError("No se encontraron resultados con el código entregado", 404)
+    )
+  }
+  const {file} = producto;
+  let ruta = path.join(path.dirname("/home/gastonrb/WebIntercar/backend-intercar/images/"), file)
+  if(!fs.existsSync(ruta)){
+    console.log("No paso")
+    return res.status(404).sendFile("/home/gastonrb/WebIntercar/backend-intercar/images/defaultFile.png")
+  }
+  console.log("Paso")
+  console.log(ruta)
+  res.status(200).sendFile(ruta)
+})
 
 const deletePhoto = dryFn(async (req, res, next) => {
   const producto = await Producto.findByPk(req.params.codigo);
@@ -117,6 +137,7 @@ const getProductos = dryFn(async (req, res, next) => {
   });
   res.status(200).json({
     success: true,
+    len : p.length,
     data: p,
   });
 });
@@ -234,4 +255,5 @@ module.exports = {
   getOfertas,
   postPhoto,
   deletePhoto,
+  getPhoto
 };

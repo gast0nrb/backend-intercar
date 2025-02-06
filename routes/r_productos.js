@@ -11,6 +11,7 @@ const {
   getOfertas,
   postPhoto,
   deletePhoto,
+  getPhoto
 } = require("../controllers/producto");
 
 const { createPrecio, updatePrecio } = require("../controllers/listaProducto");
@@ -37,9 +38,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router
-  .route("/imagenes/:codigo")
-  .post(upload.single("producto-file"), postPhoto)
-  .delete(deletePhoto)
+  .route("/imagenes/:id")
+  .get(getPhoto);
 
 router.route("/productos").get(getProductos).post(createProducto);
 

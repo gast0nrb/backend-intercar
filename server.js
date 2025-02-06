@@ -44,8 +44,8 @@ app.use("/api/v0.5/webintercar", r_permiso);
 
 
 //Rutas protegidas
-app.use("/api/v0.5/webintercar",protect, r_carro);
-app.use("/api/v0.5/webintercar",protect, r_clientes);
+app.use("/api/v0.5/webintercar", r_carro);
+app.use("/api/v0.5/webintercar", r_clientes);
 
 
 //Error handlers
